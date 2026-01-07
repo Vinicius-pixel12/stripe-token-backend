@@ -6,13 +6,18 @@ import { createClient } from "@supabase/supabase-js";
 const app = express();
 app.use(express.json());
 
+// 🔹 ROTA RAIZ (FORA de qualquer outra rota)
+app.get("/", (req, res) => {
+  res.send("Stripe Token Backend rodando 🚀");
+});
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// Criar checkout
+// 🔹 Criar checkout
 app.post("/create-checkout-session", async (req, res) => {
   const { userId, packageType } = req.body;
 
@@ -45,7 +50,7 @@ app.post("/create-checkout-session", async (req, res) => {
   res.json({ url: session.url });
 });
 
-// Webhook Stripe
+// 🔹 Webhook Stripe
 app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
@@ -79,6 +84,6 @@ app.post(
   }
 );
 
-app.listen(3000, () =>
-  console.log("Stripe backend rodando")
-);
+app.listen(3000, () => {
+  console.log("Stripe backend rodando");
+});
